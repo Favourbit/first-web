@@ -19,3 +19,11 @@ use Laravel\Fortify\Features;
 Route::get('/home', function () {
     return Inertia::render('home');
 });
+
+Route::get('/about-us', function () {
+    return Inertia::render('about-us');
+});
+
+Route::get('/FAQs', function () {
+    return Inertia::render('FAQs');
+});
