@@ -16,7 +16,7 @@ use Laravel\Fortify\Features;
 
 // require __DIR__.'/settings.php';
 
-Route::get('/home', function () {
+Route::get('/', function () {
     return Inertia::render('home');
 });
 

@@ -11,7 +11,7 @@
     <header>
         <h1>Smart Tracker</h1>
         <nav class="nav-1">
-            <Link href="/home" :style="{color: currentUrl === '/home' ? 'black' : '#a1a1a1' }" class="nav-link">Home</Link>
+            <Link href="/" :style="{color: currentUrl === '/' ? 'black' : '#a1a1a1' }" class="nav-link">Home</Link>
             <Link href="/about-us" :style="{color: currentUrl === '/about-us' ? 'black' : '#a1a1a1' }" class="nav-link">About-us</Link>
             <Link href="/FAQs" :style="{color: currentUrl === '/FAQs' ? 'black' : '#a1a1a1' }" class="nav-link">FAQs</Link>
         </nav>
@@ -31,7 +31,7 @@
         width: 100%;
         height: 80px;
         gap: 70px;
-        /* position: fixed; */
+        position: fixed;
         background-color: white;
 
 
