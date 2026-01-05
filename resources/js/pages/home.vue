@@ -18,7 +18,7 @@ import MyFooter from '@/components/footer.vue';
                 <p class="main-p">keep track of all the expences you make through out
                     and minimize financial problems</p>
 
-                <Link href="/" class="main-button-link">
+                <Link href="/signup" class="main-button-link">
                     Get Started <i class="fa-solid fa-circle-right fa-xl"
                         style="color: #ffffff; margin-left: 10px;"></i>
                 </Link>
@@ -111,7 +111,7 @@ import MyFooter from '@/components/footer.vue';
         <div class="cont-cta">
             <div class="cont-ct1a"><h1 class="ready-cta">Ready</h1> <h1 class="h1-cta"> to take </h1><h1 class="control-cta">Control?</h1></div>
             <p class="p-cta">Join thousands of users who are building better financial future today.</p>
-            <button class="link-cta"><Link href="/">Create Your Account</Link></button>
+            <button class="link-cta"><Link href="/signup">Create Your Account</Link></button>
         </div>
 
     </main>
