@@ -22,6 +22,13 @@ Route::get('/', function () {
 Route::get('/signup', function () {
     return Inertia::render('signup');
 });
+Route::get('/Profile', function () {
+    return Inertia::render('Profile');
+});
+
+Route::get('/dashboard1', function () {
+    return Inertia::render('dashboard1');
+});
 
 Route::get('/forgotPassword', function () {
     return Inertia::render('forgotPassword');
