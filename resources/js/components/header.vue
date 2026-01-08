@@ -18,8 +18,8 @@
         </nav>
 
         <nav class="nav-2">
-            <Link href="/home" class="nav-link-signin">signin</Link>
-            <Link href="/home" class="nav-link-signup">signup</Link>
+            <Link href="/login" class="nav-link-signin">signin</Link>
+            <Link href="/signup" class="nav-link-signup">signup</Link>
 
             <button class="hamburger" @click="isMenuOpen = !isMenuOpen">
                 {{ isMenuOpen ? '✕' : '☰' }}

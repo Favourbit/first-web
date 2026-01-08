@@ -55,7 +55,7 @@
         <hr class="footer-hr">
         
         <div class="footer-cont5">
-            <p class="copyright-text">Copyright 2025 Smart Tracker. All rights reserved.</p>
+            <p class="copyright-text">&copy;  Copyright 2025 Smart Tracker. All rights reserved.</p>
         </div>
     </footer>
 </template>
