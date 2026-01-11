@@ -37,15 +37,19 @@
   
         <div class="nav-item" :class="{ 'active': isPageActive('Analytics') }">
           <div class="nav-link-wrapper">
+            <Link href="/chart" class="nav-link-wrapper">
             <span class="icon"><i class="fa-solid fa-chart-pie fa-xl"></i></span>
-            <span v-if="isExpanded" class="label">Analytics</span>
+            <span v-if="isExpanded" class="label">Analyses</span>
+            </Link>
           </div>
         </div>
   
         <div class="nav-item" :class="{ 'active': isPageActive('Schedule') }">
           <div class="nav-link-wrapper">
+            <Link href="/transaction"  class="nav-link-wrapper">
             <span class="icon"><i class="fa-solid fa-table fa-xl"></i></span>
             <span v-if="isExpanded" class="label">Schedule</span>
+            </Link>
           </div>
         </div>
       </nav>

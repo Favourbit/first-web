@@ -18,6 +18,7 @@ import MyFooter from '@/components/footer1.vue';
                 <Link  href="/forgotPassword" class="forgot-link">forgoten password?</Link>
                 <button type="submit" class="submit-login">
                     Login
+                    
                 </button>
                 <div class="else-cont">
                     <hr>

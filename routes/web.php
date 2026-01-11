@@ -5,19 +5,22 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 // Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canRegister' => Features::enabled(Features::registration()),
-//     ]);
+// return Inertia::render('Welcome', [
+//     'canRegister' => Features::enabled(Features::registration()),
+// ]);
 // })->name('home');
 
 // Route::get('dashboard', function () {
-//     return Inertia::render('Dashboard');
+// return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-// require __DIR__.'/settings.php';
+// require __DIR__ . '/settings.php';
 
 Route::get('/', function () {
     return Inertia::render('home');
+});
+Route::get('/chart', function () {
+    return Inertia::render('chart');
 });
 Route::get('/signup', function () {
     return Inertia::render('signup');
@@ -43,4 +46,8 @@ Route::get('/login', function () {
 
 Route::get('/FAQs', function () {
     return Inertia::render('FAQs');
+});
+
+Route::get('/transaction', function () {
+    return Inertia::render('transaction');
 });
