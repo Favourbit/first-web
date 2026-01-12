@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
+    use Notifiable;
+   
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
@@ -19,10 +22,19 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'fullname',
         'email',
         'password',
+        'user_profile'
     ];
+    protected $primaryKey = 'user_id';
+
+    protected function userProfile(): Attribute
+{
+    return Attribute::make(
+        get: fn ($value) => $value ? base64_encode($value) : null,
+    );
+}
 
     /**
      * The attributes that should be hidden for serialization.

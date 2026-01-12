@@ -9,6 +9,8 @@
   const isPageActive = (componentName) => {
     return page.component === componentName;
   };
+
+  
   </script>
   
   <template>
@@ -55,15 +57,36 @@
       </nav>
   
       <div class="logout">
-        <span class="icon"><i class="fa-solid fa-right-from-bracket fa-xl"></i></span>
-        <span v-if="isExpanded" class="label">Logout</span>
-      </div>
+        <Link href="/logout" method="post" as="button" class="logout-link-wrapper">
+    <span class="icon"><i class="fa-solid fa-right-from-bracket fa-xl"></i></span>
+    <span v-if="isExpanded" class="label">Logout</span>
+</Link>
+</div>
     </aside>
   </template>
 
 
 
 <style scoped>
+
+.logout-link-wrapper {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Adjust to match your sidebar gap */
+    width: 100%;
+    cursor: pointer;
+    color: inherit; /* Takes the color from your sidebar text */
+    font-family: inherit;
+}
+
+.logout-link-wrapper:hover {
+    color: #ff4d4d; /* Optional: turn red on hover */
+}
+
 .sidebar {
   margin-left: 10px;
   width: 80px;

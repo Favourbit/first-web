@@ -146,11 +146,11 @@ const downloadCSV = () => {
 /* Table Box */
 .full-table-box {
     background: white;
-    border: 2px solid #000;
-    border-radius: 20px;
+    border: 1px solid #000;
+    border-radius: 15px;
     flex: 1;
     overflow-y: auto;
-    box-shadow: 8px 8px 0px #000; /* Neobrutalist style */
+    /* box-shadow: 8px 8px 0px #000; Neobrutalist style */
 }
 
 .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
