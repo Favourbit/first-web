@@ -3,6 +3,21 @@ import { Link, useForm } from '@inertiajs/vue3';
 import MyHeader from '@/components/header.vue';
 import MyFooter from '@/components/footer1.vue';
 
+// 1. Create the Form Object
+const form = useForm({
+    fullname: '',           // Matches your database column
+    email: '',              // Matches your database column
+    password: '',
+    password_confirmation: '', // Required for the 'confirmed' rule in Laravel
+});
+
+// 2. The Submit Function
+const submit = () => {
+    // We send a POST request to the URL we just made in routes/web.php
+    form.post('/signup', {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
 
 </script>
 
@@ -14,18 +29,28 @@ import MyFooter from '@/components/footer1.vue';
             <h2 class="welcome-head">Create Your Account</h2>
             <!-- <h3 class="tag-head">Join us to start tracking smart</h3> -->
 
-            <form class="form" method="post">
-                <input class="input-field" type="text" placeholder="Full Name" required>
+            <form class="form" @submit.prevent="submit">
 
-                <input class="input-field" type="email" placeholder="Email Address" required>
+                <input v-model="form.fullname" class="input-field" type="text" placeholder="full name" name="fullname"
+                    id="fullname" required>
+                <p v-if="form.errors.fullname" class="error-text">{{ form.errors.fullname }}</p>
+
+                <input v-model="form.email" class="input-field" type="email" placeholder="Email Address" name="email"
+                    id="email" required>
+                <p v-if="form.errors.email" class="error-text">{{ form.errors.email }}</p>
+
                 <div class="password-cont">
+                    <input v-model="form.password" class="input-field" type="password" placeholder="Password"
+                        name="password" id="password" required>
+                    <p v-if="form.errors.password" style="color: red; font-size: 12px;">
+                        {{ form.errors.password }}
+                    </p>
 
-                    <input class="input-field" type="password" placeholder="Password" required>
-
-                    <input class="input-field" type="password" placeholder="Confirm Password" required>
+                    <input v-model="form.password_confirmation" class="input-field" type="password"
+                        placeholder="Confirm Password" id="password_confirmation" name="password_confirmation" required>
                 </div>
 
-                <button type="submit" class="submit-login">
+                <button type="submit" class="submit-login" :disabled="form.processing">
                     Signup
                 </button>
 
@@ -66,7 +91,8 @@ import MyFooter from '@/components/footer1.vue';
     width: 100%;
     min-height: 100vh;
 }
-.password-cont{
+
+.password-cont {
     display: flex;
     width: 90%;
     flex-direction: row;
@@ -88,7 +114,7 @@ import MyFooter from '@/components/footer1.vue';
     text-align: center;
 }
 
-.welcome-head{
+.welcome-head {
     font-family: 'Poppins';
     font-weight: 600;
     font-size: 26px;
@@ -140,14 +166,17 @@ import MyFooter from '@/components/footer1.vue';
     width: 100%;
     align-items: center;
 }
-.submit-login:hover{
+
+.submit-login:hover {
     transform: scale(1.025);
     cursor: pointer;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-.submit-login:active{
+
+.submit-login:active {
     transform: scale(1);
 }
+
 /* Unified input style */
 .input-field {
     width: 90%;
@@ -223,9 +252,11 @@ hr {
     background: black;
     color: white;
 }
-.button-google:hover, .button-apple:hover {
+
+.button-google:hover,
+.button-apple:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .footer-text {

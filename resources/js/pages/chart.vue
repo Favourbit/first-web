@@ -130,11 +130,21 @@ const options = {
 .filter-btn.active { background: #000; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
 /* Dashboard Cards */
-.analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; flex: 1; }
+.analytics-grid { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr;
+     gap: 25px;
+      flex: 1;
+     
+     }
 .card {
-    background: white; border: 1.5px solid #000; border-radius: 20px;
-    padding: 25px; box-shadow: 6px 6px 0px #000; /* Neobrutalist Shadow */
-    display: flex; flex-direction: column;
+    background: white; border: 1.5px solid #000; 
+    border-radius: 15px;
+    padding: 25px; 
+    /* box-shadow: 6px 6px 0px #000;   Neobrutalist Shadow */
+    display: flex;
+     flex-direction: column;
+     overflow-y: auto;
 }
 
 .amt-label { font-size: 24px; font-weight: 700; color: #408BFA; margin-bottom: 15px; }

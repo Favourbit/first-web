@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, useForm} from '@inertiajs/vue3';
 import MyHeader from '@/components/header.vue';
 import MyFooter from '@/components/footer1.vue';
+
+
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false, // For that remember_token we talked about!
+});
+
+const submit = () => {
+    form.post('/login');
+};
 </script>
 
 <template>
@@ -11,12 +22,13 @@ import MyFooter from '@/components/footer1.vue';
             <h1 class="logo-head" style="color:white;">Smart Tracker</h1>
             <h2 class="welcome-head">Hi, Welcome back! </h2>
             <h3 class="tag-head">Login to your account</h3>
-            <form action="" class="form" method="post">
-                <input class="input-email" type="email" placeholder="Email" id="email" name="email" required>
-                <input class="input-password" ntype="password" placeholder="Password" id="password" name="password"
+            <form action="" @submit.prevent="submit" class="form" method="post">
+                <input class="input-email" v-model="form.email" type="email" placeholder="Email" id="email" name="email" required>
+                <p v-if="form.errors.email" style="color:red">{{ form.errors.email }}</p>
+                <input class="input-password" v-model="form.password" ntype="password" placeholder="Password" id="password" name="password"
                     required>
                 <Link  href="/forgotPassword" class="forgot-link">forgoten password?</Link>
-                <button type="submit" class="submit-login">
+                <button type="submit" class="submit-login" :disabled="form.processing">
                     Login
                     
                 </button>
