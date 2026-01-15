@@ -1,6 +1,7 @@
 <script setup>
 import Sidebar from '@/components/Sidebar.vue';
 import Header from '@/components/Header1.vue';
+import { Link } from '@inertiajs/vue3';
 
 const transactions = [
     { no: 13, cat: 'Groceries', amt: '4,450', time: '13:45pm' },
@@ -22,7 +23,7 @@ const transactions = [
             <div class="dashboard-grid">
                 <section class="left-col">
                     <div class="welcome">
-                        <h1>welcome John Spake</h1>
+                        <h1>welcome {{ $page.props.auth.user.fullname }}!</h1>
                         <p>manage your finance</p>
                     </div>
 
@@ -55,7 +56,9 @@ const transactions = [
                     <div class="trans-box">
                         <div class="trans-header">
                             <h3>Recent transactions</h3>
+                            <Link href="/transaction">
                             <button class="view-all">View All</button>
+                        </Link>
                         </div>
                         <div class="table-responsive">
                             <table class="trans-table">
