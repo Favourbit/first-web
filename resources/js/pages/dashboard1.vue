@@ -1,81 +1,136 @@
 <script setup>
 import Sidebar from '@/components/Sidebar.vue';
 import Header from '@/components/Header1.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
-const transactions = [
-    { no: 13, cat: 'Groceries', amt: '4,450', time: '13:45pm' },
-    { no: 14, cat: 'Books', amt: '15,000', time: '20:00pm' },
-    { no: 15, cat: 'cloths', amt: '35,000', time: '7:25am' },
-    { no: 16, cat: 'shoes', amt: '16,000', time: '11:30am' },
-    { no: 17, cat: 'kitchen equip', amt: '5,000', time: '15:15pm' },
-    { no: 18, cat: 'house assec', amt: '106,000', time: '17:05pm' },
-];
+// 1. Receive dynamic data from Laravel
+const props = defineProps({
+    transactions: { type: Array, default: () => [{description: 'Test Item', amount: 1000, category: 'Food'}] },
+    balance: { type: Number, default: 0}
+});
+
+// 2. Control the Popup visibility
+const showModal = ref(false);
+
+// 1. Add a processing state
+const isProcessing = ref(false);
+
+const submitDeposit = () => {
+    if (isProcessing.value) return; // Stop if already running
+    
+    isProcessing.value = true;
+    
+    router.post('/transactions', form, {
+        onFinish: () => {
+            isProcessing.value = false; // Re-enable when done
+        }
+    });
+};
+// 3. Setup the manual data form
+const form = useForm({
+    item_id: '',       // Optional Ref # or Receipt ID
+    description: '',
+    amount: null,
+    type: 'expense',   // 'income' for deposits, 'expense' for purchases
+    category: 'General',
+    transaction_time: new Date().toISOString().slice(0, 16),
+});
+
+// 4. Open Modal and set the transaction mode
+const openModal = (type) => {
+    form.reset();
+    form.type = type;
+    form.transaction_time = new Date().toISOString().slice(0, 16);
+
+    if (type === 'income') {
+        form.category = 'Personal Deposit';
+        form.description = 'Manual Cash In';
+    }
+    showModal.value = true;
+};
+
+// 5. Submit to Backend (Reduces/Adds money in database)
+const submitTransaction = () => {
+    // console.log("Form data being sent:", form.data()); // Optional: check data in console
+
+    form.post('/transactions', {
+        preserveScroll: true,
+        onSuccess: () => {
+            showModal.value = false;
+            form.reset();
+            alert("Saved to Database!");
+        },
+        onError: (errors) => {
+            console.log("Database refused the data:", errors);
+            alert("Error: Check the console red text.");
+        }
+    });
+};
+const formatNumber = (num) => new Intl.NumberFormat().format(num);
 </script>
 
 <template>
     <div class="layout">
         <Sidebar />
-
         <div class="main-content">
             <Header />
-
             <div class="dashboard-grid">
                 <section class="left-col">
                     <div class="welcome">
                         <h1>welcome {{ $page.props.auth.user.fullname }}!</h1>
-                        <p>manage your finance</p>
+                        <p>manual expense ledger</p>
                     </div>
 
                     <div class="box-cont">
                         <div class="balance-card">
                             <div class="bal-text">
-                                <h2>100,500 FCFA</h2>
-                                <p>Balance</p>
+                                <h2>{{ (props.balance || 0).toLocaleString() }} FCFA</h2>
+                                <p>Visual Balance</p>
                             </div>
                             <div class="bal-icon">
                                 <i class="fa-solid fa-wallet fa-2xl" style="color: #ffffff;"></i>
                             </div>
                         </div>
                         <div class="action-aside">
-                            <button class="v-btn">ADD</button>
-                            <button class="v-btn">SUBS</button>
+                            <button @click="openModal('income')" class="v-btn">DEPOSIT</button>
+                            <button @click="openModal('expense')" class="v-btn">PURCHASE</button>
                         </div>
                     </div>
 
                     <div class="chart-box">
-                        <div class="chart-labels">
-                            <span>Amt</span>
-                            <span>Time</span>
+                        <div class="chart-labels"><span>Flow</span><span>Summary</span></div>
+                        <div class="chart-visual">
+                            <p style="text-align: center; color: #ccc; margin-top: 50px;">Daily Visual Tracking</p>
                         </div>
-                        <div class="chart-visual"></div>
                     </div>
                 </section>
 
                 <section class="right-col">
                     <div class="trans-box">
                         <div class="trans-header">
-                            <h3>Recent transactions</h3>
-                            <Link href="/transaction">
-                            <button class="view-all">View All</button>
-                        </Link>
+                            <h3>Transaction History</h3>
+                            <Link href="/transaction"><button class="view-all">View All</button></Link>
                         </div>
                         <div class="table-responsive">
                             <table class="trans-table">
                                 <thead>
                                     <tr>
-                                        <th>NO</th>
-                                        <th>Categories</th>
+                                        <th>Category</th>
                                         <th>Amount</th>
-                                        <th>Time</th>
+                                        <th>Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="t in transactions" :key="t.no">
-                                        <td>{{ t.no }}</td>
-                                        <td>{{ t.cat }}</td>
-                                        <td class="amt-bold">{{ t.amt }}</td>
-                                        <td>{{ t.time }}</td>
+
+                                    <tr v-for="transaction in props.transactions" :key="transaction.id">
+                                        <td>{{ transaction.category }}</td>
+                                        <td :class="transaction.type === 'income' ? 'text-blue' : 'text-red'"
+                                            class="amt-bold">
+                                            {{ transaction.type === 'income' ? '+' : '-' }}
+                                            {{ formatNumber(transaction.amount) }}
+                                        </td>
+                                        <td>{{ new Date(transaction.transaction_time).toLocaleDateString() }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -84,11 +139,54 @@ const transactions = [
                 </section>
             </div>
         </div>
+
+        <div v-if="showModal" class="modal-overlay">
+            <div class="modal-window">
+                <div class="modal-header">
+                    <h3>{{ form.type === 'income' ? 'Input Deposit' : 'Input Purchase' }}</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="f-group" v-if="form.type === 'expense'">
+                        <label>What did you buy?</label>
+                        <input v-model="form.description" type="text" placeholder="e.g. Lunch, Taxi, Rent">
+                    </div>
+
+                    <div class="f-group">
+                        <label>Amount (FCFA)</label>
+                        <input v-model="form.amount" type="number" placeholder="Enter amount manually">
+                    </div>
+
+                    <div class="f-group" v-if="form.type === 'expense'">
+                        <label>Category</label>
+                        <select v-model="form.category">
+                            <option value="Food">Food & Drinks</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Health">Health</option>
+                            <option value="Education">Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="f-group">
+                        <label>Ref / ID (Optional)</label>
+                        <input v-model="form.item_id" type="text" placeholder="Reference number">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button @click="showModal = false" class="m-btn-cancel">Cancel</button>
+                    <button type="button" @click.prevent="submitTransaction" class="m-btn-confirm">
+                        Save Entry
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
-/* Full Screen Layout */
+/* (All original CSS provided in previous messages remains exactly the same) */
 .layout {
     display: flex;
     background: #f9fafb;
@@ -120,7 +218,6 @@ const transactions = [
     height: 100%;
 }
 
-/* Welcome Text Styles */
 .welcome {
     font-family: 'Poppins', sans-serif;
     margin-left: 20px;
@@ -141,7 +238,6 @@ const transactions = [
     margin: 0;
 }
 
-/* Balance Card Styles */
 .box-cont {
     display: flex;
     gap: 10px;
@@ -159,7 +255,6 @@ const transactions = [
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 15px rgba(158, 63, 252, 0.1);
-    /* Reduced Shadow */
 }
 
 .bal-text h2 {
@@ -177,7 +272,6 @@ const transactions = [
     margin: 0;
 }
 
-/* Chart Box Styles */
 .chart-box {
     background: white;
     border: 1px solid #ddd;
@@ -185,7 +279,6 @@ const transactions = [
     padding: 20px;
     flex: 1;
     margin-bottom: 25px;
-    /* Margin at bottom of left col */
     display: flex;
     flex-direction: column;
 }
@@ -199,7 +292,6 @@ const transactions = [
     margin-bottom: 15px;
 }
 
-/* Transaction Box & Table Lines Fix */
 .right-col {
     height: 100%;
     min-height: 0;
@@ -249,73 +341,122 @@ const transactions = [
     font-size: 13px;
     padding-bottom: 12px;
     border-bottom: 1px solid #333;
-    /* Table Lines */
 }
 
 .trans-table td {
     padding: 15px 0;
     border-bottom: 1px solid #222;
-    /* Table Lines */
     font-size: 13px;
 }
 
 .amt-bold {
     font-weight: 700;
+}
+
+.text-blue {
     color: #408BFA;
 }
 
-/* Action Buttons */
-.action-aside{
+.text-red {
+    color: #ff4d4d;
+}
+
+.action-aside {
     display: flex;
     flex-direction: column;
     color: #fff;
     gap: 5px;
 }
-.v-btn{
+
+.v-btn {
     background-color: #000;
     color: #fff;
     border-radius: 15px;
     padding: 15px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
 }
 
-
-
-
-/* Responsive Queries */
-@media (max-width: 1100px) {
-    .layout {
-        height: auto;
-        overflow: visible;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .main-content {
-        height: auto;
-    }
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
-@media (max-width: 768px) {
-    .main-content {
-        margin-left: 80px;
-        padding: 15px;
-    }
+.modal-window {
+    background: white;
+    color: #333;
+    padding: 30px;
+    border-radius: 25px;
+    width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    font-family: 'Poppins', sans-serif;
+}
 
-    .box-cont {
-        flex-direction: column;
-    }
+.modal-header h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
 
-    .action-aside {
-        flex-direction: row;
-        width: 100%;
-    }
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
 
-    .v-btn {
-        writing-mode: horizontal-tb;
-        transform: rotate(0deg);
-        flex: 1;
-    }
+.f-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.f-group label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.f-group input,
+.f-group select {
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #f9f9f9;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.m-btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: #eee;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.m-btn-confirm {
+    flex: 2;
+    padding: 12px;
+    border: none;
+    background: #000;
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
 }
 </style>

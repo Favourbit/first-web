@@ -14,12 +14,12 @@ return new class extends Migration {
             $table->id('user_id');
             $table->string('fullname', 55);
             $table->string('email', 255)->unique();
-            // $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
-            // $table->binary('user_profile')->nullable();
-            // Instead of $table->binary('user_profile')...
-// Use this to get 16MB of space:
-            DB::statement('ALTER TABLE users MODIFY user_profile MEDIUMBLOB NULL');
+
+            // This replaces the DB::statement line. 
+            // It creates the profile pic column correctly as a Large Binary (Blob)
+            $table->binary('user_profile')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -39,7 +39,6 @@ return new class extends Migration {
             $table->integer('last_activity')->index();
         });
     }
-
     /**
      * Reverse the migrations.
      */

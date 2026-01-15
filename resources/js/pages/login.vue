@@ -38,7 +38,7 @@ const submit = () => {
                     <hr>
                 </div>
                 <div class="else-button-cont">
-                    <button class="button-google">Google</button>
+                    <button class="button-google"><a href="/auth/google" class="google-login-btn">Google</a> </button>
                     <button class="button-apple">Apple</button>
                 </div>
 
