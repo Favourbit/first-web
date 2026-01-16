@@ -3,40 +3,55 @@ import { ref, computed } from 'vue';
 import Sidebar from '@/components/Sidebar.vue';
 import Header from '@/components/Header1.vue';
 
-// 1. Mock Data (In a real app, this would come from your Laravel API)
-const allTransactions = ref([
-    { id: 18, date: '2023-10-25', cat: 'House Access.', amt: 106000, type: 'Expense', status: 'Completed' },
-    { id: 17, date: '2023-10-24', cat: 'Kitchen Equip.', amt: 5000, type: 'Expense', status: 'Completed' },
-    { id: 16, date: '2023-10-24', cat: 'Shoes', amt: 16000, type: 'Expense', status: 'Pending' },
-    { id: 15, date: '2023-10-23', cat: 'Deposit', amt: 500000, type: 'Income', status: 'Completed' },
-    { id: 14, date: '2023-10-22', cat: 'Books', amt: 15000, type: 'Expense', status: 'Completed' },
-    { id: 13, date: '2023-10-21', cat: 'Groceries', amt: 4450, type: 'Expense', status: 'Completed' },
-]);
+// 1. Receive data from Laravel
+const props = defineProps({
+    transactions: Array
+});
 
+// 1. Add a processing state
+const isProcessing = ref(false);
+
+const submitDeposit = () => {
+    if (isProcessing.value) return; // Stop if already running
+    
+    isProcessing.value = true;
+    
+    router.post('/transactions', form, {
+        onFinish: () => {
+            isProcessing.value = false; // Re-enable when done
+        }
+    });
+};
+
+// ADD THIS LINE
+console.log("Check this in F12 Console:", props.transactions);
 const searchQuery = ref('');
 
-// 2. Filter Logic
+// 2. Filter Logic (Updated to use props.transactions)
 const filteredTransactions = computed(() => {
-    return allTransactions.value.filter(t => 
-        t.cat.toLowerCase().includes(searchQuery.value.toLowerCase())
+    if (!props.transactions) return [];
+    return props.transactions.filter(t =>
+        t.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        t.category.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
 
-// 3. Export Logic (Simple CSV version for now)
+// 3. Export Logic (Updated keys to match your DB columns)
 const downloadCSV = () => {
-    const headers = "ID,Date,Category,Amount,Type,Status\n";
-    const rows = filteredTransactions.value.map(t => 
-        `${t.id},${t.date},${t.cat},${t.amt},${t.type},${t.status}`
+    const headers = "Date,Description,Category,Amount,Type\n";
+    const rows = filteredTransactions.value.map(t =>
+        `${t.transaction_time},${t.description},${t.category},${t.amount},${t.type}`
     ).join("\n");
-    
+
     const blob = new Blob([headers + rows], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.setAttribute('href', url);
-    a.setAttribute('download', 'transactions_report.csv');
+    a.href = url;
+    a.download = 'my_transactions.csv';
     a.click();
 };
 </script>
+
 
 <template>
     <div class="layout">
@@ -50,7 +65,7 @@ const downloadCSV = () => {
                     <h1 class="main-title">Transaction <span class="lime-text">History</span></h1>
                     <p class="sub-text">Viewing {{ filteredTransactions.length }} total records</p>
                 </div>
-                
+
                 <div class="action-bar">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -75,23 +90,22 @@ const downloadCSV = () => {
                     </thead>
                     <tbody>
                         <tr v-for="t in filteredTransactions" :key="t.id">
-                            <td class="date-col">{{ t.date }}</td>
+                            <td class="date-col">{{ new Date(t.transaction_time).toLocaleDateString() }}</td>
                             <td class="cat-col">
-                                <span class="cat-icon"></span> {{ t.cat }}
+                                <strong>{{ t.description }}</strong><br>
+                                <small>{{ t.category }}</small>
                             </td>
                             <td>
-                                <span :class="['status-pill', t.status.toLowerCase()]">
-                                    {{ t.status }}
-                                </span>
+                                <span class="status-pill completed">Completed</span>
                             </td>
                             <td>{{ t.type }}</td>
-                            <td :class="['amt-col', t.type === 'Income' ? 'income' : 'expense']">
-                                {{ t.type === 'Income' ? '+' : '-' }} {{ t.amt.toLocaleString() }} FCFA
+                            <td :class="['amt-col', t.type === 'income' ? 'income' : 'expense']">
+                                {{ t.type === 'income' ? '+' : '-' }} {{ t.amount.toLocaleString() }} FCFA
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                
+
                 <div v-if="filteredTransactions.length === 0" class="empty-state">
                     <p>No transactions found matching "{{ searchQuery }}"</p>
                 </div>
@@ -101,8 +115,20 @@ const downloadCSV = () => {
 </template>
 
 <style scoped>
-.layout { display: flex; background: #f9fafb; height: 100vh; overflow: hidden; }
-.main-content { margin-left: 80px; flex: 1; padding: 30px; display: flex; flex-direction: column; }
+.layout {
+    display: flex;
+    background: #f9fafb;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-content {
+    margin-left: 80px;
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
 
 /* Header Section */
 .trans-page-header {
@@ -111,12 +137,28 @@ const downloadCSV = () => {
     align-items: flex-end;
     margin-bottom: 30px;
 }
-.main-title { font-family: 'Poppins'; font-size: 32px; font-weight: 800; }
-.lime-text { color: #B4E466; }
-.sub-text { color: #666; font-weight: 500; }
+
+.main-title {
+    font-family: 'Poppins';
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.lime-text {
+    color: #B4E466;
+}
+
+.sub-text {
+    color: #666;
+    font-weight: 500;
+}
 
 /* Actions */
-.action-bar { display: flex; gap: 15px; }
+.action-bar {
+    display: flex;
+    gap: 15px;
+}
+
 .search-box {
     background: white;
     border: 1.5px solid #000;
@@ -126,7 +168,13 @@ const downloadCSV = () => {
     align-items: center;
     gap: 10px;
 }
-.search-box input { border: none; outline: none; font-family: 'Poppins'; width: 200px; }
+
+.search-box input {
+    border: none;
+    outline: none;
+    font-family: 'Poppins';
+    width: 200px;
+}
 
 .download-btn {
     background: #000;
@@ -141,7 +189,11 @@ const downloadCSV = () => {
     align-items: center;
     gap: 8px;
 }
-.download-btn:hover { background: #9E3FFC; transform: translateY(-2px); }
+
+.download-btn:hover {
+    background: #9E3FFC;
+    transform: translateY(-2px);
+}
 
 /* Table Box */
 .full-table-box {
@@ -153,7 +205,12 @@ const downloadCSV = () => {
     /* box-shadow: 8px 8px 0px #000; Neobrutalist style */
 }
 
-.styled-table { width: 100%; border-collapse: collapse; text-align: left; }
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
 .styled-table th {
     padding: 20px;
     background: #f8f8f8;
@@ -165,7 +222,12 @@ const downloadCSV = () => {
     letter-spacing: 1px;
 }
 
-.styled-table td { padding: 20px; border-bottom: 1px solid #eee; font-family: 'Poppins'; font-size: 15px; }
+.styled-table td {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    font-family: 'Poppins';
+    font-size: 15px;
+}
 
 /* Status & Colors */
 .status-pill {
@@ -174,18 +236,48 @@ const downloadCSV = () => {
     font-size: 12px;
     font-weight: 600;
 }
-.status-pill.completed { background: #e9fdca; color: #4e7a00; }
-.status-pill.pending { background: #fff4ca; color: #856a00; }
 
-.amt-col { font-weight: 800; }
-.income { color: #2ecc71; }
-.expense { color: #000; }
+.status-pill.completed {
+    background: #e9fdca;
+    color: #4e7a00;
+}
 
-.empty-state { padding: 50px; text-align: center; color: #888; }
+.status-pill.pending {
+    background: #fff4ca;
+    color: #856a00;
+}
+
+.amt-col {
+    font-weight: 800;
+}
+
+.income {
+    color: #2ecc71;
+}
+
+.expense {
+    color: #000;
+}
+
+.empty-state {
+    padding: 50px;
+    text-align: center;
+    color: #888;
+}
 
 @media (max-width: 900px) {
-    .trans-page-header { flex-direction: column; align-items: flex-start; gap: 20px; }
-    .action-bar { width: 100%; }
-    .search-box { flex: 1; }
+    .trans-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .action-bar {
+        width: 100%;
+    }
+
+    .search-box {
+        flex: 1;
+    }
 }
 </style>

@@ -61,7 +61,7 @@ const submit = () => {
                 </div>
 
                 <div class="else-button-cont">
-                    <button type="button" class="button-google">Google</button>
+                    <button type="button" class="button-google"><a href="/auth/google" class="google-login-btn">Google</a> </button>
                     <button type="button" class="button-apple">Apple</button>
                 </div>
 

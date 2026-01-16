@@ -5,8 +5,37 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\GoogleController;
+use Illuminate\Http\Request; // Use this instead // Remove this if it's at the top
+use App\Http\Controllers\TransactionController;
+
+// Ensure this is inside your auth middleware group
+
+// Replace the old Route::get('/transaction'...) with this:
+Route::get('/transaction', [TransactionController::class, 'showAll'])
+    ->middleware(['auth'])
+    ->name('transactions.index');
 
 
+Route::middleware(['auth'])->group(function () {
+    // This handles showing the dashboard
+    Route::get('/dashboard1', [TransactionController::class, 'index'])->name('dashboard1');
+    Route::get('/chart', [TransactionController::class, 'chart'])->name('chart');
+
+    Route::post('/notifications/read', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.markRead');
+
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+});
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.signup');
+
+// Route::get('/dashboard1', function () {
+//     return Inertia::render('dashboard1'); // Match the .vue filename!
+// })->middleware(['auth'])->name('dashboard');
 
 // // routes/web.php
 // Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
@@ -56,9 +85,9 @@ Route::post('/profile-update', [ProfileController::class, 'update'])->name('prof
 Route::get('/', function () {
     return Inertia::render('home');
 });
-Route::get('/chart', function () {
-    return Inertia::render('chart');
-});
+// Route::get('/chart', function () {
+//     return Inertia::render('chart');
+// });
 Route::get('/signup', function () {
     return Inertia::render('signup');
 });
@@ -66,9 +95,9 @@ Route::get('/Profile', function () {
     return Inertia::render('Profile');
 });
 
-Route::get('/dashboard1', function () {
-    return Inertia::render('dashboard1');
-});
+// Route::get('/dashboard1', function () {
+//     return Inertia::render('dashboard1'); // This name must match the filename exactly
+// });
 
 Route::get('/forgotPassword', function () {
     return Inertia::render('forgotPassword');
@@ -85,8 +114,8 @@ Route::get('/FAQs', function () {
     return Inertia::render('FAQs');
 });
 
-Route::get('/transaction', function () {
-    return Inertia::render('transaction');
-});
+// Route::get('/transaction', function () {
+//     return Inertia::render('transaction');
+// });
 
 Route::post('/signup', [RegisterController::class, 'store'])->name('signup.store');
