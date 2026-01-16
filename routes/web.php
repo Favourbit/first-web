@@ -8,7 +8,27 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Http\Request; // Use this instead // Remove this if it's at the top
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Admin\AdminController;
 
+
+
+
+
+// Now this is clean and won't cause errors
+// Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+//     // This handles the main dashboard and search
+//     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    
+//     // This handles the Broadcast button
+//     Route::post('/notify', [AdminController::class, 'notify'])->name('admin.notify');
+    
+//     // This handles the Delete button
+//     Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+// });
+
+Route::prefix('admin')->group(function () { // TEMPORARILY REMOVE MIDDLEWARE
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});
 // Ensure this is inside your auth middleware group
 
 // Replace the old Route::get('/transaction'...) with this:
@@ -119,3 +139,4 @@ Route::get('/FAQs', function () {
 // });
 
 Route::post('/signup', [RegisterController::class, 'store'])->name('signup.store');
+

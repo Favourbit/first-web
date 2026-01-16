@@ -1,9 +1,31 @@
 <script setup lang="ts">
-import ScrollReveal from '@/components/ScrollReveal.vue';
-import { Link } from '@inertiajs/vue3';
-import MyHeader from '@/components/header.vue';
-import MyFooter from '@/components/footer.vue';
-</script>
+    import { onMounted } from 'vue';
+    import ScrollReveal from '@/components/ScrollReveal.vue';
+    import { Link } from '@inertiajs/vue3';
+    import MyHeader from '@/components/header.vue';
+    import MyFooter from '@/components/footer.vue';
+    
+    onMounted(() => {
+        // 1. Define the global Tawk variables on the window object
+        (window as any).Tawk_API = (window as any).Tawk_API || {};
+        (window as any).Tawk_LoadStart = new Date();
+    
+        // 2. Create and inject the script tag
+        const s1 = document.createElement("script");
+        const s0 = document.getElementsByTagName("script")[0];
+        
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/6969f1ac726a11197a5f9b04/1jf2tg30r';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        
+        if (s0 && s0.parentNode) {
+            s0.parentNode.insertBefore(s1, s0);
+        } else {
+            document.head.appendChild(s1);
+        }
+    });
+    </script>
 
 <template>
     <MyHeader />
@@ -109,9 +131,15 @@ import MyFooter from '@/components/footer.vue';
             </article>
         </div>
         <div class="cont-cta">
-            <div class="cont-ct1a"><h1 class="ready-cta">Ready</h1> <h1 class="h1-cta"> to take </h1><h1 class="control-cta">Control?</h1></div>
+            <div class="cont-ct1a">
+                <h1 class="ready-cta">Ready</h1>
+                <h1 class="h1-cta"> to take </h1>
+                <h1 class="control-cta">Control?</h1>
+            </div>
             <p class="p-cta">Join thousands of users who are building better financial future today.</p>
-            <button class="link-cta"><Link href="/signup">Create Your Account</Link></button>
+            <button class="link-cta">
+                <Link href="/signup">Create Your Account</Link>
+            </button>
         </div>
 
     </main>
@@ -120,196 +148,219 @@ import MyFooter from '@/components/footer.vue';
 </template>
 
 <style scoped>
-    /* call to action */
-    .cont-cta{
-        padding-top: 70px;
-        padding-bottom: 70px;
-        text-align: center;
-        width: 100%;
-        height: fit-content;
-        background: radial-gradient(100.42% 286.9% at 100% 50%, #DAF2B3 0%, #E9FDCA 51.92%, #B4E466 100%)
-    }
-    .h1-cta{
-        font-size: 32px;
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-style: normal;
-        color: black;
-    }
-    .link-cta{
-        width: fit-content;
-        height: fit-content;
-        background-image: linear-gradient(to right, #408BFA, #9E3FFC);
-        padding-left: 15px;
-        padding: 15px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-family: 'Poppins';
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        border-radius: 100px;
-        margin-top: 30px;
-        cursor: pointer;
-    }
-    .link-cta:hover{
-        transform: scale(1.05);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-    .link-cta:active{
-        transform: scale(1);
-    }
-    .p-cta{
-        font-size: 26px;
-        font-style: normal;
-        font-family: 'Poppins';
-        font-weight: 300;
-        padding-left: 300px;
-        padding-right: 300px;
-        line-height: 30px;
-        margin-top: 10px;
-    }
-    .ready-cta{
-        background-color: #408BFA;
-        padding: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
-        transform: rotate(5.9deg);
-        border-radius: 15px;
-        color: white;
-        height: fit-content;
-        width: fit-content;
-        font-size: 32px;
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-style: normal;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-    .cont-ct1a{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .control-cta{
-        background-color: #9E3FFC;
-        padding: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
-        transform: rotate(-5.9deg);
-        border-radius: 15px;
-        color: white;
-        height: fit-content;
-        width: fit-content;
-        font-size: 32px;
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-style: normal;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-    /* chioce area */
-    .choice-cont{
-        display: flex;
-        flex-direction: column;
-        margin: 0 auto;
-        text-align: center;
-        padding: 30px;
-    }
-    .head-choice{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 32px;
-    }
-    .headline-choice{
-        font-family: 'Poppins';
-        font-size: 20px;
-        font-weight: 400;
-        margin-top: 10px;
-    }
-    .choice-number1{
-        width: 46px;
-         height: 46px;
-        background-color: #408BFA;
-        border-radius: 100%;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-    .choice-number2{
-        width: 46px;
-         height: 46px;
-        background-color: #B4E466;
-        border-radius: 100%;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-    .h3-choice1{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 15px;
-        
-    }
-    .h3-choice2{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 15px;
+/* call to action */
+.cont-cta {
+    padding-top: 70px;
+    padding-bottom: 70px;
+    text-align: center;
+    width: 100%;
+    height: fit-content;
+    background: radial-gradient(100.42% 286.9% at 100% 50%, #DAF2B3 0%, #E9FDCA 51.92%, #B4E466 100%)
+}
+
+.h1-cta {
+    font-size: 32px;
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-style: normal;
+    color: black;
+}
+
+.link-cta {
+    width: fit-content;
+    height: fit-content;
+    background-image: linear-gradient(to right, #408BFA, #9E3FFC);
+    padding-left: 15px;
+    padding: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    border-radius: 100px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.link-cta:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.link-cta:active {
+    transform: scale(1);
+}
+
+.p-cta {
+    font-size: 26px;
+    font-style: normal;
+    font-family: 'Poppins';
+    font-weight: 300;
+    padding-left: 300px;
+    padding-right: 300px;
+    line-height: 30px;
+    margin-top: 10px;
+}
+
+.ready-cta {
+    background-color: #408BFA;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transform: rotate(5.9deg);
+    border-radius: 15px;
+    color: white;
+    height: fit-content;
+    width: fit-content;
+    font-size: 32px;
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-style: normal;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cont-ct1a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.control-cta {
+    background-color: #9E3FFC;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transform: rotate(-5.9deg);
+    border-radius: 15px;
+    color: white;
+    height: fit-content;
+    width: fit-content;
+    font-size: 32px;
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-style: normal;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* chioce area */
+.choice-cont {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    text-align: center;
+    padding: 30px;
+}
+
+.head-choice {
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 32px;
+}
+
+.headline-choice {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 10px;
+}
+
+.choice-number1 {
+    width: 46px;
+    height: 46px;
+    background-color: #408BFA;
+    border-radius: 100%;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.choice-number2 {
+    width: 46px;
+    height: 46px;
+    background-color: #B4E466;
+    border-radius: 100%;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.h3-choice1 {
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 15px;
+
+}
+
+.h3-choice2 {
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 15px;
 
 
-    }
-    .h3-choice3{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 15px;
+}
 
-    }
-    .choice-number3{
-        width: 46px;
-         height: 46px;
-        background-color: #9E3FFC;
-        border-radius: 100%;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-    .choicee-article{
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        margin: 10px auto;
-        margin-left: 100px;
-        margin-right: 100px;
-    }
-    .choice-cont1{
-        color: black;
-    }
-    .p-choice1{
-        font-size: 15px;
-        font-weight: 300;
-        font-family: 'Poppins';
-        font-style: normal;
-    }
-    .p-choice2{
-        font-size: 15px;
-        font-weight: 300;
-        font-family: 'Poppins';
-        font-style: normal;
-    }
-    .p-choice3{
-        font-size: 15px;
-        font-weight: 300;
-        font-family: 'Poppins';
-        font-style: normal;
-    }
+.h3-choice3 {
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 15px;
+
+}
+
+.choice-number3 {
+    width: 46px;
+    height: 46px;
+    background-color: #9E3FFC;
+    border-radius: 100%;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.choicee-article {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px auto;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.choice-cont1 {
+    color: black;
+}
+
+.p-choice1 {
+    font-size: 15px;
+    font-weight: 300;
+    font-family: 'Poppins';
+    font-style: normal;
+}
+
+.p-choice2 {
+    font-size: 15px;
+    font-weight: 300;
+    font-family: 'Poppins';
+    font-style: normal;
+}
+
+.p-choice3 {
+    font-size: 15px;
+    font-weight: 300;
+    font-family: 'Poppins';
+    font-style: normal;
+}
+
 .line {
     background-color: black;
     width: 80%;
@@ -585,8 +636,8 @@ main {
 /* --- 4. MOBILE RESPONSIVENESS --- */
 @media (max-width: 1100px) {
 
-        /* call to action */
-        .cont-cta{
+    /* call to action */
+    .cont-cta {
         padding-top: 70px;
         padding-bottom: 70px;
         text-align: center;
@@ -594,14 +645,16 @@ main {
         height: fit-content;
         background: radial-gradient(100.42% 286.9% at 100% 50%, #DAF2B3 0%, #E9FDCA 51.92%, #B4E466 100%)
     }
-    .h1-cta{
+
+    .h1-cta {
         font-size: 26px;
         font-family: 'Poppins';
         font-weight: 600;
         font-style: normal;
         color: black;
     }
-    .link-cta{
+
+    .link-cta {
         width: fit-content;
         height: fit-content;
         background-image: linear-gradient(to right, #408BFA, #9E3FFC);
@@ -617,14 +670,17 @@ main {
         margin-top: 30px;
         cursor: pointer;
     }
-    .link-cta:hover{
+
+    .link-cta:hover {
         transform: scale(1.05);
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     }
-    .link-cta:active{
+
+    .link-cta:active {
         transform: scale(1);
     }
-    .p-cta{
+
+    .p-cta {
         font-size: 22px;
         font-style: normal;
         font-family: 'Poppins';
@@ -634,7 +690,8 @@ main {
         line-height: 30px;
         margin-top: 10px;
     }
-    .ready-cta{
+
+    .ready-cta {
         background-color: #408BFA;
         padding: 5px;
         padding-left: 10px;
@@ -650,13 +707,15 @@ main {
         font-style: normal;
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     }
-    .cont-ct1a{
+
+    .cont-ct1a {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
     }
-    .control-cta{
+
+    .control-cta {
         background-color: #9E3FFC;
         padding: 5px;
         padding-left: 10px;
@@ -673,29 +732,32 @@ main {
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     }
 
-        /* chioce area */
-        .choice-cont{
+    /* chioce area */
+    .choice-cont {
         display: flex;
         flex-direction: column;
         margin: 0 auto;
         text-align: center;
         padding: 30px;
     }
-    .head-choice{
+
+    .head-choice {
         font-family: 'Poppins';
         font-weight: 600;
         font-size: 16px;
         line-height: 3px;
     }
-    .headline-choice{
+
+    .headline-choice {
         font-family: 'Poppins';
         font-size: 10px;
         font-weight: 400;
         margin-top: 10px;
     }
-    .choice-number1{
+
+    .choice-number1 {
         width: 24px;
-         height: 24px;
+        height: 24px;
         background-color: #408BFA;
         border-radius: 100%;
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -705,9 +767,10 @@ main {
         justify-content: center;
         cursor: pointer;
     }
-    .choice-number2{
+
+    .choice-number2 {
         width: 24px;
-         height: 24px;
+        height: 24px;
         background-color: #B4E466;
         border-radius: 100%;
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -717,28 +780,32 @@ main {
         justify-content: center;
         cursor: pointer;
     }
-    .h3-choice1{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 7px;
-        
-    }
-    .h3-choice2{
-        font-family: 'Poppins';
-        font-weight: 600;
-        font-size: 7px;
 
-
-    }
-    .h3-choice3{
+    .h3-choice1 {
         font-family: 'Poppins';
         font-weight: 600;
         font-size: 7px;
 
     }
-    .choice-number3{
+
+    .h3-choice2 {
+        font-family: 'Poppins';
+        font-weight: 600;
+        font-size: 7px;
+
+
+    }
+
+    .h3-choice3 {
+        font-family: 'Poppins';
+        font-weight: 600;
+        font-size: 7px;
+
+    }
+
+    .choice-number3 {
         width: 24px;
-         height: 24px;
+        height: 24px;
         background-color: #9E3FFC;
         border-radius: 100%;
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -748,29 +815,34 @@ main {
         justify-content: center;
         cursor: pointer;
     }
-    .choicee-article{
+
+    .choicee-article {
         display: flex;
         flex-direction: row;
         gap: 10px;
         margin: 10px auto;
 
     }
-    .choice-cont1{
+
+    .choice-cont1 {
         color: black;
     }
-    .p-choice1{
+
+    .p-choice1 {
         font-size: 7px;
         font-weight: 300;
         font-family: 'Poppins';
         font-style: normal;
     }
-    .p-choice2{
+
+    .p-choice2 {
         font-size: 7px;
         font-weight: 300;
         font-family: 'Poppins';
         font-style: normal;
     }
-    .p-choice3{
+
+    .p-choice3 {
         font-size: 7px;
         font-weight: 300;
         font-family: 'Poppins';
